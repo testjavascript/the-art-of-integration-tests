@@ -4,14 +4,14 @@ const nock = require('nock');
 const {
   initializeWebServer,
   stopWebServer,
-} = require('../../../example-application/api');
+} = require('../../../example-application/entry-points/api');
 const OrderRepository = require('../../../example-application/data-access/order-repository');
 
 let expressApp, mailerNock;
 
 beforeAll(async (done) => {
   expressApp = await initializeWebServer();
-  
+
   // ️️️✅ Best Practice: Ensure that this component is isolated by preventing unknown calls except for the api
   nock.disableNetConnect();
   nock.enableNetConnect('127.0.0.1');
@@ -26,7 +26,7 @@ beforeEach(() => {
     id: 1,
     name: 'John',
   });
-  mailerNock = nock('http://mailer.com').post('/send').reply(202);
+  mailerNock = nock('http://mail.com').post('/send').reply(202);
 });
 
 afterEach(() => {
@@ -54,12 +54,12 @@ describe('/api', () => {
       // ️️️✅ Best Practice: Intercept requests for 3rd party services to eliminate undesired side effects like emails or SMS
       // ️️️✅ Best Practice: Save the body when you need to make sure you call the external service as expected
       nock.removeInterceptor({
-        hostname: 'mailer.com',
+        hostname: 'mail.com',
         method: 'POST',
         path: '/send',
       });
       let emailPayload;
-      nock('http://mailer.com')
+      nock('http://mail.com')
         .post('/send', (payload) => ((emailPayload = payload), true))
         .times(1)
         .reply(202);

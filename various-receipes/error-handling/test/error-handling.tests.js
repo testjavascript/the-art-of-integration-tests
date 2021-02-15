@@ -4,7 +4,7 @@ const nock = require('nock');
 const {
   initializeWebServer,
   stopWebServer,
-} = require('../../../example-application/api');
+} = require('../../../example-application/entry-points/api');
 const OrderRepository = require('../../../example-application/data-access/order-repository');
 const {
   metricsExporter,
@@ -36,7 +36,7 @@ beforeEach(() => {
     id: 1,
     name: 'John',
   });
-  nock('http://mailer.com').post('/send').reply(202);
+  nock('http://mail.com').post('/send').reply(202);
 
   sinon.stub(process, 'exit');
 });

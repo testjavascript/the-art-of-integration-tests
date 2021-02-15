@@ -42,11 +42,13 @@ module.exports = class OrderRepository {
   }
 
   async addOrder(orderDetails) {
-    const addingResponse = await orderModel.create(orderDetails);
-    return addingResponse.dataValues
+    const DBResponse = await orderModel.create(orderDetails);
+
+    return DBResponse.dataValues;
   }
 
   async deleteOrder(orderToDelete) {
+    console.log(`Order is about to be deleted`, orderToDelete);
     await orderModel.destroy({ where: { id: orderToDelete } });
     return;
   }

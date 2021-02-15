@@ -5,7 +5,7 @@ const nock = require('nock');
 const {
   initializeWebServer,
   stopWebServer,
-} = require('../../../example-application/api');
+} = require('../../../example-application/entry-points/api');
 const OrderRepository = require('../../../example-application/data-access/order-repository');
 
 let expressApp;
@@ -46,10 +46,7 @@ describe('/api', () => {
 
       // ❌ Anti-Pattern: The call will succeed regardless if the input, even if no mail address will get provided
       // We're not really simulating the integration data
-      const emailHTTPCall = nock('http://localhost')
-        .post('/mailer/send')
-        .reply(202);
-
+      const emailHTTPCall = nock('http://mail.com').post('/send').reply(202);
       const orderToAdd = {
         userId: 1,
         productId: 2,

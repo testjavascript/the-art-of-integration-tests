@@ -1,7 +1,7 @@
 const request = require('supertest');
 const sinon = require('sinon');
 const nock = require('nock');
-const { initializeWebServer, stopWebServer } = require('../api');
+const { initializeWebServer, stopWebServer } = require('../entry-points/api');
 const OrderRepository = require('../data-access/order-repository');
 
 let expressApp;
@@ -137,14 +137,14 @@ describe('/api', () => {
     });
 
     // ️️️✅ Best Practice: Check external calls
-    test('When adding a new valid order, Then an email should be send to admin', async () => {
+    test('When adding a new valid order, Then an email should be send to store manager', async () => {
       //Arrange
       process.env.SEND_MAILS = 'true';
 
       // ️️️✅ Best Practice: Intercept requests for 3rd party services to eliminate undesired side effects like emails or SMS
       // ️️️✅ Best Practice: Specify the body when you need to make sure you call the 3rd party service as expected
       let emailPayload;
-      nock('http://mailer.com')
+      nock('http://mail.com')
         .post('/send', (payload) => ((emailPayload = payload), true))
         .reply(202);
 
@@ -225,7 +225,7 @@ describe('/api', () => {
       // ️️️✅ Best Practice: Intercept requests for 3rd party services to eliminate undesired side effects like emails or SMS
       // ️️️✅ Best Practice: Specify the body when you need to make sure you call the 3rd party service as expected
       let emailPayload;
-      nock('http://mailer.com')
+      nock('http://mail.com')
         .post('/send', (payload) => ((emailPayload = payload), true))
         .reply(202);
 
